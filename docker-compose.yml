@@ -1,0 +1,46 @@
+# RecargaLab — aplicação PROPOSITALMENTE VULNERÁVEL para treinamento.
+# Execute apenas localmente. Nunca exponha estes serviços em rede compartilhada ou na internet.
+name: recargalab
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: recargalab
+      POSTGRES_USER: recargalab
+      POSTGRES_PASSWORD: "Recarga@2024!"          # A02/A04: credencial fraca e em texto puro (proposital)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recargalab -d recargalab"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    networks: [lab]
+
+  operadora-mock:                                 # parceiro externo: recargas e comprovantes
+    build: ./operadora-mock
+    networks: [lab]
+
+  recargalab:                                     # API Spring Boot 3 propositalmente vulnerável
+    build: ./app
+    ports:
+      - "127.0.0.1:8081:8080"                     # só localhost
+    environment:
+      DB_PASSWORD: "Recarga@2024!"
+      JWT_SECRET: "secret123"                     # Lab 6: segredo trivial (proposital)
+      OPERADORA_URL: "http://operadora-mock:9000"
+      OPERADORA_API_KEY: "sk_live_lab_9f8e7d6c5b4a3210"   # chave fictícia, alvo do Lab 8
+    depends_on:
+      postgres:
+        condition: service_healthy
+      operadora-mock:
+        condition: service_started
+    networks: [lab]
+
+  fake-metadata:                                  # simula o serviço de metadata de nuvem (Lab 7)
+    build: ./fake-metadata
+    network_mode: "service:recargalab"            # compartilha a rede do container da API
+    cap_add: [NET_ADMIN]                          # necessário só para criar 169.254.169.254 no loopback
+    depends_on: [recargalab]
+
+networks:
+  lab: {}

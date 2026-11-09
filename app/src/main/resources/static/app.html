@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel · RecargaLab</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/app.html">Recarga<span>Lab</span></a>
+  <span class="who"><span id="nome">…</span> · saldo <b id="saldo">…</b></span>
+  <button class="ghost" id="sair">Sair</button>
+</header>
+<nav class="tabs" id="tabs">
+  <a href="#extrato">Extrato</a>
+  <a href="#recargas">Recargas</a>
+  <a href="#cashback">Cashback</a>
+  <a href="#contatos">Contatos</a>
+  <a href="#perfil">Perfil</a>
+  <a href="#comprovantes">Comprovantes</a>
+</nav>
+<main class="page">
+
+  <section id="s-extrato" class="view">
+    <h1>Extrato da carteira</h1>
+    <table class="grid"><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th class="num">Valor</th></tr></thead>
+      <tbody id="extrato"></tbody></table>
+  </section>
+
+  <section id="s-recargas" class="view">
+    <h1>Recarga de celular</h1>
+    <form id="form-recarga" class="row">
+      <label>Produto <select name="produto" id="produtos"></select></label>
+      <label>Telefone <input name="telefone" value="+5511988887777" required></label>
+      <button type="submit">Recarregar</button>
+    </form>
+    <p class="msg" id="msg-recarga" role="status"></p>
+    <h2>Buscar minhas recargas por operadora</h2>
+    <form id="form-busca" class="row">
+      <label>Operadora <select name="operadora"><option>Vivo</option><option>Claro</option><option>Tim</option></select></label>
+      <button type="submit">Buscar</button>
+    </form>
+    <table class="grid"><thead><tr><th>#</th><th>Operadora</th><th>Telefone</th><th class="num">Debitado</th><th>Status</th></tr></thead>
+      <tbody id="busca"></tbody></table>
+  </section>
+
+  <section id="s-cashback" class="view">
+    <h1>Cupons de cashback</h1>
+    <ul class="list" id="cupons"></ul>
+    <p class="msg" id="msg-cashback" role="status"></p>
+  </section>
+
+  <section id="s-contatos" class="view">
+    <h1>Contatos favoritos</h1>
+    <p class="hint">Edite o apelido e salve. A lista pública fica em <a href="/contatos">/contatos</a>.</p>
+    <ul class="list" id="contatos"></ul>
+  </section>
+
+  <section id="s-perfil" class="view">
+    <h1>Meu perfil</h1>
+    <form id="form-perfil" class="stack">
+      <label>Nome <input name="nome" required></label>
+      <label>Telefone <input name="telefone"></label>
+      <button type="submit">Salvar</button>
+    </form>
+    <p class="msg" id="msg-perfil" role="status"></p>
+  </section>
+
+  <section id="s-comprovantes" class="view">
+    <h1>Importar comprovante</h1>
+    <p class="hint">Informe a URL do comprovante emitido pela operadora.</p>
+    <form id="form-comprovante" class="row">
+      <label class="grow">URL <input name="url" value="http://operadora-mock:9000/comprovantes/RC-5001.json" required></label>
+      <button type="submit">Importar</button>
+    </form>
+    <pre class="out" id="comprovante"></pre>
+  </section>
+
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

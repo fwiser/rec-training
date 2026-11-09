@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · RecargaLab</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login">
+<main class="login-card">
+  <div class="logo big">Recarga<span>Lab</span></div>
+  <p class="hint">Carteira digital fictícia para o laboratório de desenvolvimento seguro.</p>
+  <form id="login">
+    <label>E-mail <input name="email" type="email" value="alice@lab.local" autocomplete="username" required></label>
+    <label>Senha <input name="senha" type="password" value="" autocomplete="current-password" required></label>
+    <button type="submit">Entrar</button>
+    <p class="error" id="err" role="alert"></p>
+  </form>
+  <p class="warn">Aplicação propositalmente vulnerável. Use apenas no seu ambiente local.</p>
+</main>
+<script>
+document.getElementById('login').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const r = await fetch('/api/v1/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email: f.get('email'), senha: f.get('senha')})
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) { document.getElementById('err').textContent = data.erro || 'Não foi possível entrar.'; return; }
+  localStorage.setItem('token', data.token);   // token acessível a qualquer script da origem (ver Lab 3)
+  location.href = '/app.html';
+});
+</script>
+</body>
+</html>

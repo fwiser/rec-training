@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus contatos · RecargaLab</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="/app.html">Recarga<span>Lab</span></a>
+  <span class="who" th:text="${usuario.nome}">Usuário</span>
+</header>
+<main class="page">
+  <h1>Meus contatos favoritos</h1>
+  <p class="hint">Contatos usados para recargas rápidas. Para editar, volte ao painel.</p>
+  <ul class="contacts">
+    <li th:each="c : ${contatos}">
+      <!-- VULN A05:2025 (Lab 3): th:utext não aplica encoding de HTML -->
+      <span class="nick" th:utext="${c['apelido']}">apelido</span>
+      <span class="phone" th:text="${c['telefone']}">telefone</span>
+    </li>
+  </ul>
+  <p><a href="/app.html#contatos">← voltar ao painel</a></p>
+</main>
+</body>
+</html>
